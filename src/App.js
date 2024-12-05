@@ -6,7 +6,7 @@ import Dashboard from './components/Dashboard';
 import './styles/App.css';
 
 function App() {
-  const user = { firstName: 'John', lastName: 'Doe' };
+  const user = { firstName: 'User', lastName: 'Example' };
   return (
     <Router>
       <div className="app">

@@ -14,7 +14,7 @@ function Dashboard({ user }) {
         <aside className="dashboard-sidebar">
           <ul>
             <li><a href="#transactions">View Top 10 Transactions</a></li>
-            <li><a href="#credit-cards">View List Of Credit Cards</a></li>
+            <li><a href="#credit-cards">View List of Credit Cards</a></li>
             <li><a href="#add-credit-card">Add Credit Card</a></li>
             <li><a href="#expenses">View Expenses</a></li>
           </ul>
