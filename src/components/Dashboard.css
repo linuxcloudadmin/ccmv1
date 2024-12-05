@@ -1,0 +1,67 @@
+/* General layout */
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  /* Header styles */
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #282c34;
+    color: white;
+    font-size: 18px;
+  }
+  
+  .dashboard-header h1 {
+    margin: 0;
+    font-size: 24px;
+  }
+  
+  .welcome-message {
+    font-weight: bold;
+  }
+  
+  /* Sidebar styles */
+  .dashboard-body {
+    display: flex;
+    flex: 1;
+  }
+  
+  .dashboard-sidebar {
+    width: 200px;
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-right: 1px solid #ddd;
+  }
+  
+  .dashboard-sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .dashboard-sidebar li {
+    margin-bottom: 10px;
+  }
+  
+  .dashboard-sidebar a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+  }
+  
+  .dashboard-sidebar a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Main content styles */
+  .dashboard-content {
+    flex: 1;
+    padding: 20px;
+    font-size: 16px;
+  }
+  
