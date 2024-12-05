@@ -1,40 +1,46 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import './LoginPage.css';
+import validator from "validator";
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [emailMessage, setEmailMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
+
+  const handleEmailChange = (e) => {
+    const inputEmail = e.target.value;
+    setEmail(inputEmail);
+
+    if (inputEmail === '') {
+      setEmailMessage('');
+    } else if (validator.isEmail(inputEmail)) {
+      setEmailMessage('Valid Email');
+    } else {
+      setEmailMessage('Enter valid Email!');
+    }
+  };
 
   const validateForm = (e) => {
     e.preventDefault();
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordRegex = /^(?=.*[!@#$%^&*])(?=.{6,})/;
 
-    if (!emailRegex.test(email)) {
+    if (!validator.isEmail(email)) {
       setErrorMessage('Please enter a valid email');
       return;
     }
 
-    if (!passwordRegex.test(password)) {
-      setErrorMessage('Please have 1 special character and min 6 chars');
-      return;
-    }
+    // if (!passwordRegex.test(password)) {
+    //   setErrorMessage('Please have 1 special character and min 6 chars');
+    //   return;
+    // }
 
     setErrorMessage('');
     alert('Login Successful!');
     navigate("/dashboard");
-    // Proceed with login logic
-
-    // if (username === "admin" && password === "password") {
-    //     // On successful login, navigate to the dashboard
-    //     navigate("/dashboard");
-    //   } else {
-    //     setError("Invalid username or password");
-    //   }
   };
 
   return (
@@ -50,8 +56,13 @@ function LoginPage() {
               id="email"
               placeholder="Enter your email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
             />
+            {emailMessage && (
+              <p className={`email-message ${emailMessage === 'Valid Email' ? 'valid' : 'invalid'}`}>
+                {emailMessage}
+              </p>
+            )}
           </div>
           <div className="form-group">
             <label htmlFor="password">Password:</label>
