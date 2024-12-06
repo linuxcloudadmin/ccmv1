@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import WelcomePage from './components/WelcomePage';
 import LoginPage from './components/LoginPage';
 import Dashboard from './components/Dashboard';
+import ViewExpenses from './components/ViewExpenses';
+
 import './styles/App.css';
 
 function App() {
@@ -14,6 +16,7 @@ function App() {
           <Route path="/" element={<WelcomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/dashboard" element={<Dashboard user={user} />} />
+          <Route path="/viewexpenses" element={<ViewExpenses />} />
         </Routes>
       </div>
     </Router>

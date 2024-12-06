@@ -1,0 +1,81 @@
+.ViewExpenses {
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  h1, h2 {
+    text-align: center;
+  }
+  
+  .card-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .card-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .card-item button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .card-item button:hover {
+    background-color: #0056b3;
+  }
+  
+  .transactions-section {
+    margin-top: 20px;
+  }
+  
+  .transaction-input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .transaction-input input {
+    flex: 1;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  
+  .transaction-input button {
+    padding: 5px 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .transaction-input button:hover {
+    background-color: #218838;
+  }
+  
+  .transaction-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .transaction-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
