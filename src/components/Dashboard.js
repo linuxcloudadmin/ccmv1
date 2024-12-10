@@ -16,7 +16,7 @@ function Dashboard({ user }) {
             <li><a href="#transactions">View Top 10 Transactions</a></li>
             <li><a href="#credit-cards">View List of Credit Cards</a></li>
             <li><a href="#add-credit-card">Add Credit Card</a></li>
-            <li><a href="/viewexpenses" target="_blank">View Expenses</a></li>
+            <li><a href="/viewexpenses">View Expenses</a></li>  {/* target="_blank" */}
           </ul>
         </aside>
         <main className="dashboard-content">
