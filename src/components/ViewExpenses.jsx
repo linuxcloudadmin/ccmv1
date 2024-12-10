@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import "./ViewExpenses.css";
 
-
+// Credit Cards Data
 const creditCards = [
-  { id: 1, name: "Card A", active: true },
-  { id: 2, name: "Card B", active: true },
-  { id: 3, name: "Card C", active: true },
+  { id: 1, name: "Card A", number: "5244 2150 8252 6420", expiry: "10/25", holder: "JOE ALISON", active: true },
+  { id: 2, name: "Card B", number: "4539 1234 5678 9012", expiry: "12/23", holder: "JANE DOE", active: true },
+  { id: 3, name: "Card C", number: "6011 9876 5432 1098", expiry: "08/24", holder: "JOHN SMITH", active: true },
+  { id: 4, name: "Card C", number: "6011 9876 5432 1098", expiry: "08/24", holder: "JOHN SMITH", active: true },
+  { id: 5, name: "Card C", number: "6011 9876 5432 1098", expiry: "08/24", holder: "JOHN SMITH", active: true },
 ];
 
 const transactionsData = {
@@ -26,12 +28,35 @@ const transactionsData = {
   ],
 };
 
+// Credit Card Component
+const CreditCard = ({ card, onClick }) => {
+  return (
+    <div className="credit-card" onClick={() => onClick(card.id)}>
+      <div className="chip"></div>
+      <div className="card-details">
+        <div className="card-number">{card.number}</div>
+        <div className="card-info">
+          <div>
+            <span>Card Holder</span>
+            <p>{card.holder}</p>
+          </div>
+          <div>
+            <span>Valid Till</span>
+            <p>{card.expiry}</p>
+          </div>
+        </div>
+      </div>
+      <div className="card-type">VISA</div>
+    </div>
+  );
+};
+
 function ViewExpenses() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [numTransactions, setNumTransactions] = useState("");
   const [transactions, setTransactions] = useState([]);
 
-  const handleView = (cardId) => {
+  const handleCardClick = (cardId) => {
     setSelectedCard(cardId);
     setTransactions([]); // Reset transactions when switching cards
   };
@@ -52,19 +77,16 @@ function ViewExpenses() {
   return (
     <div className="ViewExpenses">
       <h1>Active Credit Cards</h1>
-      <ul className="card-list">
+      <div className="card-list">
         {creditCards
           .filter((card) => card.active)
           .map((card) => (
-            <li key={card.id} className="card-item">
-              <span>{card.name}</span>
-              <button onClick={() => handleView(card.id)}>View</button>
-            </li>
+            <CreditCard key={card.id} card={card} onClick={handleCardClick} />
           ))}
-      </ul>
+      </div>
       {selectedCard && (
         <div className="transactions-section">
-          <h2>Transactions for {creditCards.find(card => card.id === selectedCard)?.name}</h2>
+          <h2>Transactions for {creditCards.find((card) => card.id === selectedCard)?.name}</h2>
           <div className="transaction-input">
             <input
               type="number"
@@ -72,17 +94,27 @@ function ViewExpenses() {
               value={numTransactions}
               onChange={(e) => setNumTransactions(e.target.value)}
             />
-            <button onClick={handleTransactionsSubmit}>Submit</button>
+            <button onClick={handleTransactionsSubmit}>View</button>
           </div>
           {transactions.length > 0 && (
-            <ul className="transaction-list">
-              {transactions.map((transaction) => (
-                <li key={transaction.id}>
-                  <span>Amount: ${transaction.amount}</span>
-                  <span>Date: {transaction.date}</span>
-                </li>
-              ))}
-            </ul>
+            <table className="transaction-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Amount</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {transactions.map((transaction) => (
+                  <tr key={transaction.id}>
+                    <td>{transaction.id}</td>
+                    <td>${transaction.amount}</td>
+                    <td>{transaction.date}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           )}
         </div>
       )}

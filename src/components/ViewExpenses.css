@@ -1,81 +1,178 @@
+/* General container styles */
 .ViewExpenses {
-    font-family: Arial, sans-serif;
-    max-width: 600px;
-    margin: auto;
-    padding: 20px;
-  }
-  
-  h1, h2 {
-    text-align: center;
-  }
-  
-  .card-list {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .card-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 10px 0;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .card-item button {
-    padding: 5px 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-  }
-  
-  .card-item button:hover {
-    background-color: #0056b3;
-  }
-  
-  .transactions-section {
-    margin-top: 20px;
-  }
-  
-  .transaction-input {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  
-  .transaction-input input {
-    flex: 1;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-  }
-  
-  .transaction-input button {
-    padding: 5px 10px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-  }
-  
-  .transaction-input button:hover {
-    background-color: #218838;
-  }
-  
-  .transaction-list {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .transaction-list li {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 10px;
-    border-bottom: 1px solid #ddd;
-  }
-  
+  padding: 20px;
+  font-family: "Arial", sans-serif;
+  background-color: #000; /* Black background */
+  min-height: 100vh;
+  color: #fff; /* White text for contrast */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Card List Container */
+.card-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Center cards horizontally */
+  align-items: center; /* Center cards vertically */
+  gap: 20px; /* Spacing between cards */
+  margin-top: 20px;
+  width: 100%;
+}
+
+/* Credit Card Styles */
+.credit-card {
+  width: 320px;
+  height: 200px;
+  background: linear-gradient(135deg, #4c00f0, #ff4da6);
+  border-radius: 16px;
+  color: #fff;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  font-family: "Arial", sans-serif;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.credit-card:hover {
+  transform: scale(1.05);
+}
+
+/* Other styles remain unchanged */
+.chip {
+  width: 40px;
+  height: 30px;
+  background: gold;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.card-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-number {
+  font-size: 18px;
+  letter-spacing: 3px;
+  margin-bottom: 12px;
+}
+
+.card-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-info span {
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.card-info p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.card-type {
+  text-align: right;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+
+/* Transactions section styles */
+.transactions-section {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #1a1a1a; /* Dark gray for card content */
+  border-radius: 8px;
+}
+
+.transaction-input {
+  margin-bottom: 20px;
+}
+
+.transaction-input input {
+  padding: 8px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #333;
+  color: #fff;
+}
+
+.transaction-input button {
+  padding: 8px 16px;
+  background-color: #4c00f0;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.transaction-input button:hover {
+  background-color: #ff4da6;
+}
+
+.transaction-list {
+  list-style: none;
+  padding: 0;
+}
+
+.transaction-list li {
+  background: #333;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  color: #fff;
+}
+
+.transaction-list span {
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* General styles remain unchanged */
+.ViewExpenses {
+  padding: 20px;
+  font-family: "Arial", sans-serif;
+  background-color: #000;
+  min-height: 100vh;
+  color: #fff;
+}
+
+/* Table Styles */
+.transaction-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.transaction-table th,
+.transaction-table td {
+  border: 1px solid #333;
+  padding: 8px 12px;
+  text-align: left;
+  color: #fff;
+}
+
+.transaction-table th {
+  background-color: #4c00f0;
+  text-transform: uppercase;
+}
+
+.transaction-table tr:nth-child(even) {
+  background-color: #1a1a1a;
+}
+
+.transaction-table tr:hover {
+  background-color: #333;
+}
