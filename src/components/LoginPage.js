@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import './LoginPage.css';
 import validator from "validator";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -17,9 +19,9 @@ function LoginPage() {
     if (inputEmail === '') {
       setEmailMessage('');
     } else if (validator.isEmail(inputEmail)) {
-      setEmailMessage('Valid Email');
+      setEmailMessage('valid');
     } else {
-      setEmailMessage('Enter valid Email!');
+      setEmailMessage('invalid');
     }
   };
 
@@ -33,13 +35,8 @@ function LoginPage() {
       return;
     }
 
-    // if (!passwordRegex.test(password)) {
-    //   setErrorMessage('Please have 1 special character and min 6 chars');
-    //   return;
-    // }
-
     setErrorMessage('');
-    alert('Login Successful!');
+    //alert('Login Successful!');
     navigate("/dashboard");
   };
 
@@ -59,9 +56,13 @@ function LoginPage() {
               onChange={handleEmailChange}
             />
             {emailMessage && (
-              <p className={`email-message ${emailMessage === 'Valid Email' ? 'valid' : 'invalid'}`}>
-                {emailMessage}
-              </p>
+              <div className="email-status">
+                {emailMessage === 'valid' ? (
+                  <CheckCircleIcon sx={{ color: 'green', fontSize: 24 }} />
+                ) : emailMessage === 'invalid' ? (
+                  <CancelIcon sx={{ color: 'red', fontSize: 24 }} />
+                ) : null}
+              </div>
             )}
           </div>
           <div className="form-group">
