@@ -1,13 +1,14 @@
-version: '3.9'
+#version: '3.9'
 
 services:
-  frontend:
+  ccmapp-frontend:
+    hostname: ccmapp-frontend
     build:
       context: .
       dockerfile: Dockerfile
     container_name: ccmapp-frontend
     ports:
-      - '3000:3000'  # Expose frontend on port 3000
+      - '4000:3000'  # Expose port 3000 on localhost:4000
     stdin_open: true
     # environment:
     #   - REACT_APP_API_URL=http://backend:8090  # Set the backend API URL for React
