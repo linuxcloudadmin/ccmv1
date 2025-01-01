@@ -21,6 +21,7 @@ function WelcomePage() {
         to="/login"
         variant="contained"
         sx={{
+          bgcolor: '#0047ba',
           position: 'absolute',
           top: 16, // Top-right for all screen sizes
           right: 16,
@@ -34,11 +35,11 @@ function WelcomePage() {
       </Button>
 
       {/* Text Content */}
-      <Box
+      {/* <Box
         sx={{
           position: 'absolute',
           top: { xs: 'auto', sm: 80 }, // Move below button on mobile
-          bottom: { xs: 16, sm: 'auto' }, // Maintain spacing for mobile
+          bottom: { xs: 100, sm: 'auto' }, // Maintain spacing for mobile
           left: '50%',
           transform: 'translateX(-50%)', // Center horizontally
           textAlign: 'center',
@@ -53,8 +54,12 @@ function WelcomePage() {
           variant="h3"
           component="h1"
           sx={{
+            bgcolor: '#000',
+            // color: '#0047ba',
+            color: '#fff',
             mb: 2,
             fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
+            // fontWeight: 'bold',
           }}
         >
           Welcome to Credit Card Management Portal
@@ -63,13 +68,15 @@ function WelcomePage() {
           variant="h6"
           component="p"
           sx={{
+            color: '#000',
             mb: 2,
             fontSize: { xs: '1rem', sm: '1.25rem', md: '1.5rem' },
+            fontWeight: 'bold',
           }}
         >
           Manage your accounts, track expenses, and stay on top of your finances.
         </Typography>
-      </Box>
+      </Box> */}
     </Box>
   );
 }

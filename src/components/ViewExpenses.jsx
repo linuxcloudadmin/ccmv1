@@ -37,7 +37,7 @@ function ViewExpenses() {
     // Fetch credit card data from API using Axios
     const fetchCreditCards = async () => {
       try {
-        const response = await axios.get("/api/customer/creditcard/achilleyb");
+        const response = await axios.get("/api2/api/customer/creditcard/achilleyb");
         const data = response.data;
         const activeCards = data.creditcards
           .filter((card) => card.status === "disabled")
@@ -57,7 +57,7 @@ function ViewExpenses() {
   const fetchTransactions = async (cardId, limit) => {
     try {
       const response = await axios.get(
-        `/api/customer/transactions/lastXTransactions/achilleyb`,
+        `/api2/api/customer/transactions/lastXTransactions/achilleyb`,
         {
           params: { limit, status: "both" },
         }

@@ -15,8 +15,10 @@ import {
 } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { userName } from './userData';
 
-function Dashboard({ user }) {
+// function Dashboard({ user }) {
+function Dashboard() {
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate(); 
 
@@ -31,6 +33,8 @@ function Dashboard({ user }) {
   const handleLogout = () => {
     navigate("/");
   };
+
+  console.log(userName.first);
 
   return (
     <Box
@@ -72,13 +76,13 @@ function Dashboard({ user }) {
               color: '#fff',
             }}
           >
-            Welcome {user?.firstName} {user?.lastName}
+            Welcome {userName.last} | {userName.first} 
           </Typography>
           <Tooltip title="Account Menu">
             <IconButton onClick={handleMenuOpen} sx={{ p: 0 }}>
               <Avatar
-                src="/path-to-avatar.jpg" // Replace with actual avatar URL
-                alt={`${user?.firstName} ${user?.lastName}`}
+                //src="images/image04.png" // Replace with actual avatar URL
+                alt={`${userName.first} ${userName.last}`}
               />
             </IconButton>
           </Tooltip>
@@ -105,8 +109,8 @@ function Dashboard({ user }) {
           >
             <MenuItem>
               <Avatar
-                src="/path-to-avatar.jpg"
-                alt={`${user?.firstName} ${user?.lastName}`}
+                src="/image04.png"
+                alt={`${userName.first} ${userName.last}`}
                 sx={{ width: 32, height: 32, mr: 2 }}
               />
               Profile

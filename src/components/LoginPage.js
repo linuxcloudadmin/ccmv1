@@ -5,6 +5,8 @@ import './LoginPage.css';
 import validator from "validator";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { setUserName } from './userData';
+
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -42,14 +44,15 @@ function LoginPage() {
     }
 
     try {
-      // Example endpoint for login
-      const response = await axios.post('/api/customer/login/subsequent', {
-        email,
-        password,
-      });
+      // endpoint for login
+      const response = await axios.post('/api1/api/customer/login/subsequent', {email,password,});
 
       const { token, name, accountValidated, passwordExpired, message } = response.data;
 
+      setUserName(name.first, name.last);
+      console.log(name.first);
+      console.log(name.last);
+      alert();
       // Save the token to localStorage (or sessionStorage)
       localStorage.setItem('jwtToken', token);
 

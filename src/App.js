@@ -8,14 +8,14 @@ import ViewExpenses from './components/ViewExpenses';
 import './styles/App.css';
 
 function App() {
-  const user = { firstName: 'User', lastName: 'Example' };
+  // const user = { firstName: 'User', lastName: 'Example' };
   return (
     <Router>
       <div className="app">
         <Routes>
           <Route path="/" element={<WelcomePage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/dashboard" element={<Dashboard user={user} />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/viewexpenses" element={<ViewExpenses />} />
         </Routes>
       </div>
