@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ccmapp-frontend
+    # container_name: ccmapp-frontend
     ports:
       - '4000:3000'  # Expose port 3000 on localhost:4000
     stdin_open: true
