@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 import './LoginPage.css';
 import validator from "validator";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -10,6 +11,8 @@ function LoginPage() {
   const [password, setPassword] = useState('');
   const [emailMessage, setEmailMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [validationMessage, setValidationMessage] = useState('');
   const navigate = useNavigate();
 
   const handleEmailChange = (e) => {
@@ -25,19 +28,55 @@ function LoginPage() {
     }
   };
 
-  const validateForm = (e) => {
+  const validateForm = async (e) => {
     e.preventDefault();
 
-    const passwordRegex = /^(?=.*[!@#$%^&*])(?=.{6,})/;
-
     if (!validator.isEmail(email)) {
-      setErrorMessage('Please enter a valid email');
+      setErrorMessage('Please enter a valid email.');
       return;
     }
 
-    setErrorMessage('');
-    //alert('Login Successful!');
-    navigate("/dashboard");
+    if (password.length < 6) {
+      setErrorMessage('Password must be at least 6 characters long.');
+      return;
+    }
+
+    try {
+      // Example endpoint for login
+      const response = await axios.post('/api/customer/login/subsequent', {
+        email,
+        password,
+      });
+
+      const { token, name, accountValidated, passwordExpired, message } = response.data;
+
+      // Save the token to localStorage (or sessionStorage)
+      localStorage.setItem('jwtToken', token);
+
+      if (accountValidated) {
+        setValidationMessage(
+          'Your account is not validated. Please check your email to verify your account.'
+        );
+        return;
+      }
+
+      if (passwordExpired) {
+        setValidationMessage(
+          'Your password has expired. Please reset your password to continue.'
+        );
+        navigate('/reset-password'); // Redirect to password reset page
+        return;
+      }
+
+      // If everything is fine, show the welcome message and navigate to the dashboard
+      setSuccessMessage(message);
+      navigate('/dashboard');
+    } catch (error) {
+      // Handle errors
+      const errorResponse =
+        error.response?.data?.message || 'An error occurred during login.';
+      setErrorMessage(errorResponse);
+    }
   };
 
   return (
@@ -45,6 +84,8 @@ function LoginPage() {
       <div className="login-container">
         <h2>Login</h2>
         {errorMessage && <p className="error-message">{errorMessage}</p>}
+        {successMessage && <p className="success-message">{successMessage}</p>}
+        {validationMessage && <p className="validation-message">{validationMessage}</p>}
         <form className="login-form" onSubmit={validateForm}>
           <div className="form-group">
             <label htmlFor="email">Email:</label>

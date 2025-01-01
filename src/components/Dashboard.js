@@ -29,8 +29,6 @@ function Dashboard({ user }) {
   };
 
   const handleLogout = () => {
-    // setAnchorEl(null);
-    // console.log('User logged out'); // Add logout logic here
     navigate("/");
   };
 
@@ -40,31 +38,38 @@ function Dashboard({ user }) {
         display: 'flex',
         flexDirection: 'column',
         height: '100vh',
-        bgcolor: 'background.default',
-        color: 'text.primary',
+        bgcolor: '#f4f6f8', // Updated background color
+        color: '#333', // Updated text color
       }}
     >
       {/* Header */}
       <Box
         component="header"
         sx={{
-          bgcolor: 'primary.dark',
-          color: 'primary.contrastText',
+          bgcolor: '#0047ba', // Updated primary color
+          color: '#fff', // Updated text color
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           p: 2,
         }}
       >
-        <Typography variant="h4" component="h1">
-          CCM Dashboard
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <img
+            src="/images/image03.png" // Replace with your logo's path
+            alt="Logo"
+            style={{ height: 40, width: 'auto' }} // Adjust logo size
+          />
+          <Typography variant="h4" component="h1">
+            CCM Dashboard
+          </Typography>
+        </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <Typography
             variant="subtitle1"
             sx={{
               display: { xs: 'none', sm: 'block' },
-              color: 'primary.contrastText',
+              color: '#fff',
             }}
           >
             Welcome {user?.firstName} {user?.lastName}
@@ -131,17 +136,15 @@ function Dashboard({ user }) {
         <Box
           component="aside"
           sx={{
-            bgcolor: 'text.secondary',
-            color: 'secondary.contrastText',
+            bgcolor: '#94a2b8', // Updated sidebar background
+            color: '#000', // Updated sidebar text color
             width: { xs: '100%', sm: '250px' }, // Full width on mobile, fixed width on larger screens
             p: 2,
           }}
         >
-          {/* <Typography variant="h6" sx={{ mb: 2 }}>
-            Navigation
-          </Typography> */}
           <List>
             <ListItem disablePadding>
+              
               <ListItemButton component="a" href="#transactions">
                 <ListItemText primary="View Top 10 Transactions" />
               </ListItemButton>
@@ -171,7 +174,8 @@ function Dashboard({ user }) {
             flex: 1,
             p: 2,
             textAlign: 'center',
-            bgcolor: 'background.paper',
+            bgcolor: '#fff', // Updated main content background
+            color: '#333', // Updated main content text color
           }}
         >
           <Typography variant="body1">
