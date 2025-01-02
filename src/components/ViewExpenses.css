@@ -60,7 +60,7 @@ body, html {
   width: 100%; /* Make the card responsive */
   max-width: 320px;
   height: 200px;
-  background: #0047ba; /* Walmart blue color */
+  background: #0047ba; /*  blue color */
   border-radius: 16px;
   color: #fff;
   padding: 16px;
@@ -78,12 +78,12 @@ body, html {
   transform: scale(1.05);
 }
 
-/* Walmart Logo Styles */
+/*  Logo Styles */
 .credit-card::before {
   content: "Walmart";
   font-size: 20px;
   font-weight: bold;
-  color: #ffcc00; /* Walmart yellow */
+  color: #ffcc00; /*  yellow */
   position: absolute;
   top: 16px;
   right: 16px;

@@ -5,7 +5,8 @@ import './LoginPage.css';
 import validator from "validator";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { setUserName, fetchUsernameFromApi } from './userData';
+import { setUserName } from './userData';
+
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -14,9 +15,6 @@ function LoginPage() {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [validationMessage, setValidationMessage] = useState('');
-  const [showVerificationModal, setShowVerificationModal] = useState(false);
-  const [modalEmail, setModalEmail] = useState('');
-  const [modalEmailError, setModalEmailError] = useState('');
   const navigate = useNavigate();
 
   const handleEmailChange = (e) => {
@@ -46,7 +44,9 @@ function LoginPage() {
     }
 
     try {
-      const response = await axios.post('/api1/api/customer/login/subsequent', { email, password });
+      // endpoint for login
+      const response = await axios.post('/api1/api/customer/login/subsequent', {email,password,});
+
       const { token, name, accountValidated, passwordExpired, message } = response.data;
 
       setUserName(name.first, name.last);
@@ -55,11 +55,11 @@ function LoginPage() {
       alert();
       // Save the token to localStorage (or sessionStorage)
       localStorage.setItem('jwtToken', token);
-      fetchUsernameFromApi(token);
 
-      if (accountValidated) {      //remove "!" to login without validation
-        setModalEmail(email);
-        setShowVerificationModal(true);
+      if (!accountValidated) {
+        setValidationMessage(
+          'Your account is not validated. Please check your email to verify your account.'
+        );
         return;
       }
 
@@ -67,35 +67,19 @@ function LoginPage() {
         setValidationMessage(
           'Your password has expired. Please reset your password to continue.'
         );
-        navigate('/reset-password');
+        navigate('/reset-password'); // Redirect to password reset page
         return;
       }
+
+      // If everything is fine, show the welcome message and navigate to the dashboard
       setSuccessMessage(message);
       navigate('/dashboard');
     } catch (error) {
-      const errorResponse = error.response?.data?.message || 'An error occurred during login.';
+      // Handle errors
+      const errorResponse =
+        error.response?.data?.message || 'An error occurred during login.';
       setErrorMessage(errorResponse);
     }
-  };
-
-  const handleSendVerification = async () => {
-    if (!validator.isEmail(modalEmail)) {
-      setModalEmailError('Please enter a valid email address.');
-      return;
-    }
-
-    try {
-      await axios.post('/api1/api/customer/send-verification', { email: modalEmail });
-      alert('Verification email sent. Please check your inbox.');
-      setShowVerificationModal(false);
-    } catch (error) {
-      alert('Failed to send verification email. Please try again later.');
-    }
-  };
-
-  const handleModalEmailChange = (e) => {
-    setModalEmail(e.target.value);
-    setModalEmailError('');
   };
 
   return (
@@ -138,34 +122,6 @@ function LoginPage() {
           <button type="submit" className="login-button">Login</button>
         </form>
       </div>
-
-      {showVerificationModal && (
-        <div className="verification-modal">
-          <div className="modal-content">
-            <h3>Your account is not validated.</h3>
-            <p>Please verify your email to send verification link.</p>
-            <div className="form-group">
-              <label htmlFor="modal-email">Email:</label>
-              <input
-                type="email"
-                id="modal-email"
-                value={modalEmail}
-                onChange={handleModalEmailChange}
-              />
-              {modalEmailError && <p className="error-message">{modalEmailError}</p>}
-            </div>
-            <button onClick={handleSendVerification} className="modal-button">
-              Send Verification Email
-            </button>
-            <button
-              onClick={() => setShowVerificationModal(false)}
-              className="modal-close-button"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
