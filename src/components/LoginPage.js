@@ -1,11 +1,23 @@
 import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import './LoginPage.css';
 import validator from "validator";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { setUserName, fetchUsernameFromApi } from './userData';
+
+export function getJwtToken() {
+  return localStorage.getItem('jwtToken');
+}
+
+export function setJwtToken(token) {
+  localStorage.setItem('jwtToken', token);
+}
+
+export function removeJwtToken() {
+  localStorage.removeItem('jwtToken');
+}
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -46,18 +58,33 @@ function LoginPage() {
     }
 
     try {
-      const response = await axios.post('/api1/api/customer/login/subsequent', { email, password });
+      // const a="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzdWRoYXJzYW50Y21AZ21haWwuY29tIiwiZW1haWwiOiJzdWRoYXJzYW50Y21AZ21haWwuY29tIiwidXNlcm5hbWUiOiJzdWRoYXJzYW50Y20iLCJpYXQiOjE3MzU4OTkyNDAsImV4cCI6MTczNTkzNTI0MH0.2DXlspIS05lbcQmqHaOl8idbUxrwaL6KF-bwfx83f-_1a7rbemcAYwZN8X0nuSFmpguSsLnMJ2F7mMQjZJqfQg";
+      // const response1 = await axios.get('/api1/api/customer/jwt/validate', {
+      //   params: {
+      //     token: a
+      //   }
+      // });
+      // console.log(response1.data);
+      const encodedPassword = btoa(password);
+      const response = await axios.post('/api1/api/customer/login/subsequent', { email, password: encodedPassword, });
       const { token, name, accountValidated, passwordExpired, message } = response.data;
+      console.log(response.data);
 
       setUserName(name.first, name.last);
       console.log(name.first);
       console.log(name.last);
       alert();
+      
       // Save the token to localStorage (or sessionStorage)
-      localStorage.setItem('jwtToken', token);
-      fetchUsernameFromApi(token);
+      // localStorage.setItem('jwtToken', token);
+      setJwtToken(token);
+      console.log(token);
+      console.log(getJwtToken());
 
-      if (accountValidated) {      //remove "!" to login without validation
+
+
+      if (!accountValidated) {      //remove "!" to login without validation
+        fetchUsernameFromApi(token);
         setModalEmail(email);
         setShowVerificationModal(true);
         return;
@@ -70,25 +97,65 @@ function LoginPage() {
         navigate('/reset-password');
         return;
       }
+
+      // const a="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzdWRoYXJzYW50Y21AZ21haWwuY29tIiwiZW1haWwiOiJzdWRoYXJzYW50Y21AZ21haWwuY29tIiwidXNlcm5hbWUiOiJzdWRoYXJzYW50Y20iLCJpYXQiOjE3MzU4OTkyNDAsImV4cCI6MTczNTkzNTI0MH0.2DXlspIS05lbcQmqHaOl8idbUxrwaL6KF-bwfx83f-_1a7rbemcAYwZN8X0nuSFmpguSsLnMJ2F7mMQjZJqfQg";
+      // const response1 = await axios.get('/api1/api/customer/jwt/validate', {
+      //   params: {
+      //     token: token
+      //   }
+      // });
+      // console.log(response1.data);
+
+      fetchUsernameFromApi(token);
       setSuccessMessage(message);
       navigate('/dashboard');
+      
     } catch (error) {
       const errorResponse = error.response?.data?.message || 'An error occurred during login.';
       setErrorMessage(errorResponse);
     }
   };
 
+  
   const handleSendVerification = async () => {
     if (!validator.isEmail(modalEmail)) {
       setModalEmailError('Please enter a valid email address.');
       return;
     }
-
+    console.log ("hello1");
     try {
-      await axios.post('/api1/api/customer/send-verification', { email: modalEmail });
+      const token=getJwtToken();
+      console.log(token);
+      console.log(modalEmail);
+      const options = {
+        method: 'POST',
+        url: '/api1/api/customer/send-verification',
+        headers: {
+          Accept: '*/*',
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        data: {email: 'sushan1151@gmail.com'}
+      };
+
+      const { data } = await axios(options);
+      // try {
+        
+      //   console.log(data);
+      // } catch (error) {
+      //   console.error(error);
+      // }
+
+
+  console.log(data);
+      console.log(token);
+      // console.log(response,response.data);
+      console.log ("hello");
       alert('Verification email sent. Please check your inbox.');
       setShowVerificationModal(false);
     } catch (error) {
+      console.error(error.response.data);
+      alert(error.response.data.error);
       alert('Failed to send verification email. Please try again later.');
     }
   };

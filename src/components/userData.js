@@ -7,10 +7,6 @@ export const setUserName = (first, last) => {
 };
 
 
-// Import axios (if using in a Node.js environment, install axios via npm: npm install axios)
-// In browsers, include axios via a script tag or your bundler.
-
-
 // Declare oneusername outside the function
 export let oneusername = null;
 
@@ -26,13 +22,14 @@ export async function fetchUsernameFromApi(savedtoken) {
     }
 
     // Send the token to the API
+    // const response = await axios.get('/api1/api/customer/jwt/validate', {
     const response = await axios.get('/api1/api/customer/jwt/validate', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+      params: {
+        token: token
       }
     });
 
+    
     // Assign the retrieved username to the exported variable
     oneusername = response.data.username;
 
