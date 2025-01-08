@@ -67,6 +67,7 @@ function LoginPage() {
       // console.log(response1.data);
       const encodedPassword = btoa(password);
       const response = await axios.post('/api1/api/customer/login/subsequent', { email, password: encodedPassword, });
+      // const { data } = await axios.post('/api1/api/customer/login/subsequent', { email, password: encodedPassword, });
       const { token, name, accountValidated, passwordExpired, message } = response.data;
       console.log(response.data);
 
@@ -113,6 +114,7 @@ function LoginPage() {
     } catch (error) {
       const errorResponse = error.response?.data?.message || 'An error occurred during login.';
       setErrorMessage(errorResponse);
+      alert(error.response.data.error);
     }
   };
 
@@ -139,12 +141,7 @@ function LoginPage() {
       };
 
       const { data } = await axios(options);
-      // try {
-        
-      //   console.log(data);
-      // } catch (error) {
-      //   console.error(error);
-      // }
+
 
 
   console.log(data);
