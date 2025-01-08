@@ -58,18 +58,14 @@ function LoginPage() {
     }
 
     try {
-      // const a="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzdWRoYXJzYW50Y21AZ21haWwuY29tIiwiZW1haWwiOiJzdWRoYXJzYW50Y21AZ21haWwuY29tIiwidXNlcm5hbWUiOiJzdWRoYXJzYW50Y20iLCJpYXQiOjE3MzU4OTkyNDAsImV4cCI6MTczNTkzNTI0MH0.2DXlspIS05lbcQmqHaOl8idbUxrwaL6KF-bwfx83f-_1a7rbemcAYwZN8X0nuSFmpguSsLnMJ2F7mMQjZJqfQg";
-      // const response1 = await axios.get('/api1/api/customer/jwt/validate', {
-      //   params: {
-      //     token: a
-      //   }
-      // });
-      // console.log(response1.data);
       const encodedPassword = btoa(password);
       const response = await axios.post('/api1/api/customer/login/subsequent', { email, password: encodedPassword, });
       // const { data } = await axios.post('/api1/api/customer/login/subsequent', { email, password: encodedPassword, });
       const { token, name, accountValidated, passwordExpired, message } = response.data;
+      // const { token, name, accountValidated, passwordExpired, message } = data;
       console.log(response.data);
+      console.log(response);
+      // console.log(data);
 
       setUserName(name.first, name.last);
       console.log(name.first);
@@ -99,22 +95,14 @@ function LoginPage() {
         return;
       }
 
-      // const a="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzdWRoYXJzYW50Y21AZ21haWwuY29tIiwiZW1haWwiOiJzdWRoYXJzYW50Y21AZ21haWwuY29tIiwidXNlcm5hbWUiOiJzdWRoYXJzYW50Y20iLCJpYXQiOjE3MzU4OTkyNDAsImV4cCI6MTczNTkzNTI0MH0.2DXlspIS05lbcQmqHaOl8idbUxrwaL6KF-bwfx83f-_1a7rbemcAYwZN8X0nuSFmpguSsLnMJ2F7mMQjZJqfQg";
-      // const response1 = await axios.get('/api1/api/customer/jwt/validate', {
-      //   params: {
-      //     token: token
-      //   }
-      // });
-      // console.log(response1.data);
-
       fetchUsernameFromApi(token);
       setSuccessMessage(message);
       navigate('/dashboard');
       
     } catch (error) {
-      const errorResponse = error.response?.data?.message || 'An error occurred during login.';
+      // alert(error.response.data.error);
+      const errorResponse = error.response?.data?.error || 'An error occurred during login.';
       setErrorMessage(errorResponse);
-      alert(error.response.data.error);
     }
   };
 
@@ -137,14 +125,13 @@ function LoginPage() {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        data: {email: 'sushan1151@gmail.com'}
+        // data: {email: 'sushan1151@gmail.com'}
+        data: {email: modalEmail}
       };
 
       const { data } = await axios(options);
 
-
-
-  console.log(data);
+      console.log(data);
       console.log(token);
       // console.log(response,response.data);
       console.log ("hello");
@@ -153,7 +140,7 @@ function LoginPage() {
     } catch (error) {
       console.error(error.response.data);
       alert(error.response.data.error);
-      alert('Failed to send verification email. Please try again later.');
+      // alert('Failed to send verification email. Please try again later.');
     }
   };
 

@@ -15,7 +15,8 @@ import {
 } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { userName } from './userData';
+import { userName, oneusername } from './userData';
+import { getJwtToken, removeJwtToken } from './LoginPage';
 
 // function Dashboard({ user }) {
 function Dashboard() {
@@ -31,10 +32,13 @@ function Dashboard() {
   };
 
   const handleLogout = () => {
+    removeJwtToken()
     navigate("/");
   };
 
   console.log(userName.first);
+  console.log('from dashboard:', oneusername);
+  console.log('from dashboard:', getJwtToken());
 
   return (
     <Box
