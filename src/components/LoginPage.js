@@ -5,7 +5,9 @@ import './LoginPage.css';
 import validator from "validator";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { setUserName, fetchUsernameFromApi } from './userData';
+import { setUserName, fetchUsernameFromApi, checkToken } from './userData';
+
+
 
 export function getJwtToken() {
   return localStorage.getItem('jwtToken');
@@ -18,6 +20,38 @@ export function setJwtToken(token) {
 export function removeJwtToken() {
   localStorage.removeItem('jwtToken');
 }
+
+export async function validateJwt(savedToken) { 
+
+  if (!savedToken) {
+    console.warn("No JWT token found in localStorage.");
+    alert("Not a valid session");
+    localStorage.clear();
+    return false; // Indicate validation failure without throwing an error
+  }
+
+  try {
+    const response = await axios.get('/api1/api/customer/jwt/validate', {
+      params: { token: savedToken },
+    });
+
+    if (response.status === 200) {
+      return true;
+    }
+    else  {
+      return false;
+    }
+
+  } catch (error) {
+    alert(error.response.data.error);
+    alert("Not a valid session1");
+    localStorage.clear();
+    // console.error("Error during JWT validation:", error.message);
+    return false; // Handle API call failure as validation failure
+  }
+}
+
+
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -60,24 +94,22 @@ function LoginPage() {
     try {
       const encodedPassword = btoa(password);
       const response = await axios.post('/api1/api/customer/login/subsequent', { email, password: encodedPassword, });
-      // const { data } = await axios.post('/api1/api/customer/login/subsequent', { email, password: encodedPassword, });
       const { token, name, accountValidated, passwordExpired, message } = response.data;
-      // const { token, name, accountValidated, passwordExpired, message } = data;
+
       console.log(response.data);
       console.log(response);
-      // console.log(data);
 
-      setUserName(name.first, name.last);
+      // Save the token, firstname and lastname to localStorage (or sessionStorage)
+      setJwtToken(token);
+      localStorage.setItem("userNameFirst", name.first);
+      localStorage.setItem("userNameLast", name.last);
+
       console.log(name.first);
       console.log(name.last);
-      alert();
       
-      // Save the token to localStorage (or sessionStorage)
-      // localStorage.setItem('jwtToken', token);
-      setJwtToken(token);
+      alert();
       console.log(token);
       console.log(getJwtToken());
-
 
 
       if (!accountValidated) {      //remove "!" to login without validation
@@ -95,9 +127,20 @@ function LoginPage() {
         return;
       }
 
+      const isValid = validateJwt(token);
+      if (isValid)
+      {
+        navigate('/dashboard');
+      }
+      else
+      {
+        alert("Invalid JWT session Token");
+        navigate('/');
+      }
+
       fetchUsernameFromApi(token);
       setSuccessMessage(message);
-      navigate('/dashboard');
+      // navigate('/dashboard');
       
     } catch (error) {
       // alert(error.response.data.error);

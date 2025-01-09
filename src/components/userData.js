@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getJwtToken, removeJwtToken, validateJwt } from './LoginPage';
 
 export let userName = { first: '', last: '' };
 
@@ -34,13 +35,37 @@ export async function fetchUsernameFromApi(savedtoken) {
     oneusername = response.data.username;
 
     console.log('Username retrieved:', oneusername);
+    console.log('Status code:', response.status);
 
     return oneusername;
   } catch (error) {
+    alert(error.response.data.error);
     console.error('Error fetching username:', error.message);
   }
 }
 
 // Usage
 // const apiEndpoint = 'https://example.com/api/endpoint'; // Replace with your API URL
+
+
+// export const checkToken = async () => {
+//   const token = getJwtToken();
+
+//   // Await the promise from validateJwt to get the resolved value (true/false)
+//   const isValid =  validateJwt(token);
+//   console.log ("ud",isValid);
+//   // Now you can use the value of isValid in an if condition
+//   if (isValid) {
+//     console.log("Token is valid");
+//     return true;
+//     // Proceed with your logic if valid
+//   } else {
+//     console.log("Token is invalid");
+//     return false;
+//     // Handle invalid token logic (e.g., redirect or show an error message)
+//   }
+// };
+
+
+
 
