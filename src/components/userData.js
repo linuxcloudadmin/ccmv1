@@ -33,6 +33,7 @@ export async function fetchUsernameFromApi(savedtoken) {
     
     // Assign the retrieved username to the exported variable
     oneusername = response.data.username;
+    localStorage.setItem('username', oneusername);
 
     console.log('Username retrieved:', oneusername);
     console.log('Status code:', response.status);

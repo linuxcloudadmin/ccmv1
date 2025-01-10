@@ -1,28 +1,127 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Import Axios
-import "./ViewExpenses.css";
+import axios from "axios";
+import {
+  Box,
+  Button,
+  Typography,
+  Card,
+  CardContent,
+  Grid,
+  TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+} from "@mui/material";
+import CreditCardIcon from "@mui/icons-material/CreditCard";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
-// Credit Card Component
 const CreditCard = ({ card, onClick }) => {
+  const [showDetails, setShowDetails] = useState(false);
+
+  const handleToggleDetails = async () => {
+    setShowDetails(!showDetails);
+    // Call API to log toggle action
+    // axios.post("/api/toggleCardDetails", { cardId: card.creditCardId, showDetails: !showDetails });
+    const axios = require('axios').default;
+
+    const options = {
+    method: 'PUT',
+    url: 'http://localhost:8090/api/customer/creditcard/togglecreditcard/achilleyb/1/toggle'
+    // url: `/api2/api/customer/creditcard/togglecreditcard/${username}//toggle`
+    };
+
+    try {
+    const { data } = await axios.request(options);
+    console.log(data);
+    } catch (error) {
+    console.error(error);
+    }
+  };
+
   return (
-    <div className="credit-card" onClick={() => onClick(card.creditCardId)}>
-      <div className="chip"></div>
-      <div className="card-details">
-        <div className="card-number">{card.creditCardNumber}</div>
-        <div className="card-info">
-          <div>
-            <span>Card Holder</span>
-            <p>{card.holder}</p>
-          </div>
-          <div>
-            <span>Valid Till</span>
-            <p>{`${card.expiryMonth}/${card.expiryYear}`}</p>
-          </div>
-        </div>
-      </div>
-      <div className="card-type">{card.wireTransactionVendor.toUpperCase()}</div>
-    </div>
+    <Card
+      sx={{
+        width: 320,
+        height: 200,
+        backgroundColor: "#0047ba",
+        color: "#fff",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        padding: 2,
+        position: "relative",
+        cursor: "pointer",
+        boxShadow: 3,
+        transition: "transform 0.3s ease",
+        "&:hover": { transform: "scale(1.05)" },
+      }}
+      onClick={() => onClick(card.creditCardId)}
+    >
+        <Box sx={{ display: "flex", justifyContent: "space-between", marginLeft: 0}}>
+            <Box
+                component="img"
+                src="/images/image03.png"
+                alt="Walmart Logo"
+                sx={{ width: 40, height: 40 }}
+            />
+            <Typography variant="h7" sx={{ marginLeft: 5, marginTop: 0 }}>Card ID: {`${card.creditCardId}`}</Typography>
+            {/* <IconButton onClick={handleToggleDetails} sx={{ color: "#fff", marginLeft: 17 }}>
+            {showDetails ? <VisibilityOffIcon /> : <VisibilityIcon />}
+            </IconButton> */}
+
+            <Typography variant="h6" component="div" sx={{ color: "#ffcc00", marginTop: 0.5 }}>
+            Walmart
+            </Typography>
+
+        </Box>
+
+        {/* <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginLeft: 33 }}>       
+            <IconButton onClick={handleToggleDetails} sx={{ color: "#fff" }}>
+            {showDetails ? <VisibilityOffIcon /> : <VisibilityIcon />}
+            </IconButton>
+        </Box> */}
+
+        <Box>
+            <Typography variant="h6" sx={{ letterSpacing: 2, textAlign: "center" }}>
+            {showDetails ? card.creditCardNumber : "•••• •••• •••• ••••"}
+            </Typography>
+            
+            <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }} >
+                <Box>
+                    <Typography variant="caption">Card Holder</Typography>
+                    <Typography variant="body2">{card.holder}</Typography>
+                </Box>
+
+                {/* <Box>
+                    <Typography variant="caption">CVV</Typography>
+                    <Typography variant="body2">{`${card.cvv}`}</Typography>
+                </Box> */}
+
+                <Box>
+                    <Typography variant="caption">Valid Till</Typography>
+                    <Typography variant="body2">{`${card.expiryMonth}/${card.expiryYear}`}</Typography>
+                </Box>
+            </Box>
+        </Box>
+        
+        <Box sx={{ display: "flex", justifyContent: "space-between", marginLeft: 0}}>
+            <IconButton onClick={handleToggleDetails} sx={{ color: "#fff" }}>
+                    {showDetails ? <VisibilityOffIcon /> : <VisibilityIcon />}
+            </IconButton>
+
+            <Typography variant="body2" align="right" sx={{ marginBottom :0 }} >
+                {card.wireTransactionVendor.toUpperCase()}
+            </Typography>
+        </Box>
+        
+    </Card>
   );
 };
 
@@ -32,12 +131,15 @@ function ViewExpenses() {
   const [numTransactions, setNumTransactions] = useState("");
   const [transactions, setTransactions] = useState([]);
   const navigate = useNavigate();
+  const username = localStorage.getItem('username');
 
   useEffect(() => {
-    // Fetch credit card data from API using Axios
     const fetchCreditCards = async () => {
       try {
-        const response = await axios.get("/api2/api/customer/creditcard/listcreditcards/achilleyb");
+        const response = await axios.get(
+          "/api2/api/customer/creditcard/listcreditcards/achilleyb"
+        //   `/api2/api/customer/creditcard/listcreditcards/${username}`
+        );
         const data = response.data;
         const activeCards = data.creditcards
           .filter((card) => card.status === "enabled")
@@ -57,8 +159,8 @@ function ViewExpenses() {
   const fetchTransactions = async (cardId, limit) => {
     try {
       const response = await axios.get(
-        // `/api2/api/customer/transactions/lastXExpenses/achilleyb`,
-        `/api2/api/customer/transactions/lastXTransactions/achilleyb`,
+        "/api2/api/customer/transactions/lastXTransactions/achilleyb",
+        //   `/api2/api/customer/transactions/lastXTransactions/${username}`,
         {
           params: { limit, status: "both" },
         }
@@ -72,7 +174,7 @@ function ViewExpenses() {
 
   const handleCardClick = (cardId) => {
     setSelectedCard(cardId);
-    setTransactions([]); // Reset transactions when switching cards
+    setTransactions([]);
   };
 
   const handleTransactionsSubmit = () => {
@@ -88,70 +190,122 @@ function ViewExpenses() {
     navigate("/dashboard");
   };
 
+  const handleLogout = () => {
+    // removeJwtToken();
+    // localStorage.removeItem("userNameFirst");
+    // localStorage.removeItem("userNameLast");
+    localStorage.clear();
+    navigate("/");
+  };
+
+  
   return (
-    <div className="ViewExpenses">
-      <button className="home-button" onClick={goToHome}>
+    <Box sx={{ padding: 3, minHeight: "100vh", backgroundColor: "#bfbaba" }}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={goToHome}
+        sx={{ position: "absolute", top: 16, right: 16 }}
+      >
         Home
-      </button>
+      </Button>
 
-      <div className="cc-title">
-        <h1>Active Credit Cards</h1>
-      </div>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleLogout}
+        sx={{ position: "absolute", top: 16, left: 16}}
+      >
+        Logout
+      </Button>
 
-      <div className="card-list">
+      <Typography
+        variant="h4"
+        align="center"
+        sx={{ marginTop: 5, marginBottom: 4 }}
+      >
+        Active Credit Cards
+      </Typography>
+
+      <Grid container spacing={3} justifyContent="center">
         {creditCards.length === 0 ? (
-          <p>Loading credit cards...</p>
+          <Typography>Loading credit cards...</Typography>
         ) : (
           creditCards.map((card) => (
-            <CreditCard key={card.creditCardId} card={card} onClick={handleCardClick} />
+            <Grid item key={card.creditCardId}>
+              <CreditCard card={card} onClick={handleCardClick} />
+            </Grid>
           ))
         )}
-      </div>
+      </Grid>
+
       {selectedCard && (
-        <div className="transactions-section">
-          <h2>
+        <Box
+          sx={{
+            marginTop: 4,
+            padding: 5,
+            backgroundColor: "#fff",
+            borderRadius: 2,
+            maxWidth: 800,
+            mx: "auto",
+          }}
+        >
+          <Typography variant="h5" gutterBottom sx={{ marginTop: 0 }}>
             Transactions for {creditCards.find((card) => card.creditCardId === selectedCard)?.holder}
-          </h2>
-          <div className="transaction-input">
-            <input
+          </Typography>
+
+          <Typography variant="h7" sx={{ marginTop: 0 }}>
+            Selected Card ID: {`${selectedCard}`}
+          </Typography>
+
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 3, marginTop: 3 }}>
+            <TextField
+              label="Number of Transactions"
               type="number"
-              placeholder="Enter number of transactions"
+              variant="outlined"
               value={numTransactions}
               onChange={(e) => setNumTransactions(e.target.value)}
+              fullWidth
             />
-            <button onClick={handleTransactionsSubmit}>View</button>
-          </div>
+            
+            <Button variant="contained" onClick={handleTransactionsSubmit}>
+              View
+            </Button>
+          </Box>
+
           {transactions.length > 0 ? (
-            <table className="transaction-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Amount</th>
-                  <th>Date</th>
-                  <th>Time</th>
-                  <th>Type</th>
-                  <th>Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                {transactions.map((transaction) => (
-                  <tr key={transaction.transactionId}>
-                    <td>{transaction.transactionId}</td>
-                    <td>${transaction.transactionAmount.toFixed(2)}</td>
-                    <td>{transaction.transactionDate}</td>
-                    <td>{transaction.transactionTime}</td>
-                    <td>{transaction.transactionType.toUpperCase()}</td>
-                    <td>{transaction.transactionDesc}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>ID</TableCell>
+                    <TableCell>Amount</TableCell>
+                    <TableCell>Date</TableCell>
+                    <TableCell>Time</TableCell>
+                    <TableCell>Type</TableCell>
+                    <TableCell>Description</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {transactions.map((transaction) => (
+                    <TableRow key={transaction.transactionId}>
+                      <TableCell>{transaction.transactionId}</TableCell>
+                      <TableCell>${transaction.transactionAmount.toFixed(2)}</TableCell>
+                      <TableCell>{transaction.transactionDate}</TableCell>
+                      <TableCell>{transaction.transactionTime}</TableCell>
+                      <TableCell>{transaction.transactionType.toUpperCase()}</TableCell>
+                      <TableCell>{transaction.transactionDesc}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           ) : (
-            <p>No transactions found.</p>
+            <Typography>No transactions found.</Typography>
           )}
-        </div>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 }
 

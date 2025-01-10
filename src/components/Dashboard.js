@@ -33,10 +33,12 @@ function Dashboard() {
     setAnchorEl(null);
   };
 
+  const username = localStorage.getItem('username');
   const handleLogout = () => {
-    removeJwtToken();
-    localStorage.removeItem("userNameFirst");
-    localStorage.removeItem("userNameLast");
+    // removeJwtToken();
+    // localStorage.removeItem("userNameFirst");
+    // localStorage.removeItem("userNameLast");
+    localStorage.clear();
     navigate("/");
   };
 
