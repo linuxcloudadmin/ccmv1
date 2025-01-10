@@ -21,6 +21,7 @@ import {
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { getJwtToken, removeJwtToken, validateJwt } from './LoginPage';
 
 const CreditCard = ({ card, onClick }) => {
   const [showDetails, setShowDetails] = useState(false);
@@ -198,115 +199,125 @@ function ViewExpenses() {
     navigate("/");
   };
 
-  
-  return (
-    <Box sx={{ padding: 3, minHeight: "100vh", backgroundColor: "#bfbaba" }}>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={goToHome}
-        sx={{ position: "absolute", top: 16, right: 16 }}
-      >
-        Home
-      </Button>
-
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleLogout}
-        sx={{ position: "absolute", top: 16, left: 16}}
-      >
-        Logout
-      </Button>
-
-      <Typography
-        variant="h4"
-        align="center"
-        sx={{ marginTop: 5, marginBottom: 4 }}
-      >
-        Active Credit Cards
-      </Typography>
-
-      <Grid container spacing={3} justifyContent="center">
-        {creditCards.length === 0 ? (
-          <Typography>Loading credit cards...</Typography>
-        ) : (
-          creditCards.map((card) => (
-            <Grid item key={card.creditCardId}>
-              <CreditCard card={card} onClick={handleCardClick} />
-            </Grid>
-          ))
-        )}
-      </Grid>
-
-      {selectedCard && (
-        <Box
-          sx={{
-            marginTop: 4,
-            padding: 5,
-            backgroundColor: "#fff",
-            borderRadius: 2,
-            maxWidth: 800,
-            mx: "auto",
-          }}
+  const token=getJwtToken();
+  const isValid= validateJwt(token);
+  if (isValid) 
+    {
+    return (
+        <Box sx={{ padding: 3, minHeight: "100vh", backgroundColor: "#bfbaba" }}>
+        <Button
+            variant="contained"
+            color="primary"
+            onClick={goToHome}
+            sx={{ position: "absolute", top: 16, right: 16 }}
         >
-          <Typography variant="h5" gutterBottom sx={{ marginTop: 0 }}>
-            Transactions for {creditCards.find((card) => card.creditCardId === selectedCard)?.holder}
-          </Typography>
+            Home
+        </Button>
 
-          <Typography variant="h7" sx={{ marginTop: 0 }}>
-            Selected Card ID: {`${selectedCard}`}
-          </Typography>
+        <Button
+            variant="contained"
+            color="primary"
+            onClick={handleLogout}
+            sx={{ position: "absolute", top: 16, left: 16}}
+        >
+            Logout
+        </Button>
 
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 3, marginTop: 3 }}>
-            <TextField
-              label="Number of Transactions"
-              type="number"
-              variant="outlined"
-              value={numTransactions}
-              onChange={(e) => setNumTransactions(e.target.value)}
-              fullWidth
-            />
-            
-            <Button variant="contained" onClick={handleTransactionsSubmit}>
-              View
-            </Button>
-          </Box>
+        <Typography
+            variant="h4"
+            align="center"
+            sx={{ marginTop: 5, marginBottom: 4 }}
+        >
+            Active Credit Cards
+        </Typography>
 
-          {transactions.length > 0 ? (
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>ID</TableCell>
-                    <TableCell>Amount</TableCell>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Time</TableCell>
-                    <TableCell>Type</TableCell>
-                    <TableCell>Description</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {transactions.map((transaction) => (
-                    <TableRow key={transaction.transactionId}>
-                      <TableCell>{transaction.transactionId}</TableCell>
-                      <TableCell>${transaction.transactionAmount.toFixed(2)}</TableCell>
-                      <TableCell>{transaction.transactionDate}</TableCell>
-                      <TableCell>{transaction.transactionTime}</TableCell>
-                      <TableCell>{transaction.transactionType.toUpperCase()}</TableCell>
-                      <TableCell>{transaction.transactionDesc}</TableCell>
+        <Grid container spacing={3} justifyContent="center">
+            {creditCards.length === 0 ? (
+            <Typography>Loading credit cards...</Typography>
+            ) : (
+            creditCards.map((card) => (
+                <Grid item key={card.creditCardId}>
+                <CreditCard card={card} onClick={handleCardClick} />
+                </Grid>
+            ))
+            )}
+        </Grid>
+
+        {selectedCard && (
+            <Box
+            sx={{
+                marginTop: 4,
+                padding: 5,
+                backgroundColor: "#fff",
+                borderRadius: 2,
+                maxWidth: 800,
+                mx: "auto",
+            }}
+            >
+            <Typography variant="h5" gutterBottom sx={{ marginTop: 0 }}>
+                Transactions for {creditCards.find((card) => card.creditCardId === selectedCard)?.holder}
+            </Typography>
+
+            <Typography variant="h7" sx={{ marginTop: 0 }}>
+                Selected Card ID: {`${selectedCard}`}
+            </Typography>
+
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 3, marginTop: 3 }}>
+                <TextField
+                label="Number of Transactions"
+                type="number"
+                variant="outlined"
+                value={numTransactions}
+                onChange={(e) => setNumTransactions(e.target.value)}
+                fullWidth
+                />
+                
+                <Button variant="contained" onClick={handleTransactionsSubmit}>
+                View
+                </Button>
+            </Box>
+
+            {transactions.length > 0 ? (
+                <TableContainer component={Paper}>
+                <Table>
+                    <TableHead>
+                    <TableRow>
+                        <TableCell>ID</TableCell>
+                        <TableCell>Amount</TableCell>
+                        <TableCell>Date</TableCell>
+                        <TableCell>Time</TableCell>
+                        <TableCell>Type</TableCell>
+                        <TableCell>Description</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          ) : (
-            <Typography>No transactions found.</Typography>
-          )}
+                    </TableHead>
+                    <TableBody>
+                    {transactions.map((transaction) => (
+                        <TableRow key={transaction.transactionId}>
+                        <TableCell>{transaction.transactionId}</TableCell>
+                        <TableCell>${transaction.transactionAmount.toFixed(2)}</TableCell>
+                        <TableCell>{transaction.transactionDate}</TableCell>
+                        <TableCell>{transaction.transactionTime}</TableCell>
+                        <TableCell>{transaction.transactionType.toUpperCase()}</TableCell>
+                        <TableCell>{transaction.transactionDesc}</TableCell>
+                        </TableRow>
+                    ))}
+                    </TableBody>
+                </Table>
+                </TableContainer>
+            ) : (
+                <Typography>No transactions found.</Typography>
+            )}
+            </Box>
+        )}
         </Box>
-      )}
-    </Box>
-  );
+    );
+    }
+    else
+    {
+      alert("Invalid JWT session Token");
+      handleLogout();
+      // navigate("/");
+    }
 }
 
 export default ViewExpenses;
