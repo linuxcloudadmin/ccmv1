@@ -214,12 +214,32 @@ function ViewExpenses() {
     navigate("/dashboard");
   };
 
-  const handleLogout = () => {
-    // removeJwtToken();
-    // localStorage.removeItem("userNameFirst");
-    // localStorage.removeItem("userNameLast");
+  const handleLogout = async () => {
+    // const axios = require('axios').default;
+    const token=getJwtToken();
+
+    const options = {
+      method: 'POST',
+      url: '/api1/api/customer/logout',
+      headers: {
+        Accept: '*/*',
+        Authorization: `Bearer ${token}`,
+      }
+    };
+
+    try {
+      const { data } = await axios(options);
+      console.log(data);
+    } catch (error) {
+      // Handle the error silently
+      if (error.response.status === 403) {
+        console.warn("Suppressed 403 error.");
+      } else {
+        console.error(error); // Log other errors if necessary
+      }
+    }
     localStorage.clear();
-    navigate("/login");
+    navigate('/login');
   };
 
 

@@ -45,6 +45,31 @@ export async function fetchUsernameFromApi(savedtoken) {
   }
 }
 
+
+// export const handleLogout = (navigate) => {
+//   const token = getJwtToken();
+
+//   const options = {
+//     method: 'POST',
+//     url: '/api1/api/customer/logout',
+//     headers: {
+//       Accept: '*/*',
+//       Authorization: `Bearer ${token}`,
+//     },
+//   };
+
+//   try {
+//     const { data } = axios(options);
+//     console.log(data);
+//   } catch (error) {
+//     console.error(error);
+//   }
+//   localStorage.clear();
+//   navigate('/login');
+// };
+
+
+
 // Usage
 // const apiEndpoint = 'https://example.com/api/endpoint'; // Replace with your API URL
 

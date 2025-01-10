@@ -24,13 +24,14 @@ export function removeJwtToken() {
 export async function validateJwt(savedToken) { 
 
   if (!savedToken) {
-    // console.warn("No JWT token found in localStorage.");
+    console.warn("No JWT token found in localStorage.");
     // alert("Not a valid session. Close the window and Relogin 0");
-    localStorage.clear();
+    // localStorage.clear();
     return false; // Indicate validation failure without throwing an error    
   }
 
   try {
+    // const response = await axios.get('/api1/api/customer/token/validate', {
     const response = await axios.get('/api1/api/customer/jwt/validate', {
       params: { token: savedToken },
     });
@@ -43,11 +44,12 @@ export async function validateJwt(savedToken) {
     }
 
   } catch (error) {
+    console.warn(error.response.data.error);
     // alert(error.response.data.error);
     // alert("Not a valid session. Close the window and Relogin 1");
-    localStorage.clear();
+    // localStorage.clear();
     // console.error("Error during JWT validation:", error.message);
-    return false; // Handle API call failure as validation failure
+    // return false; // Handle API call failure as validation failure
   }
 }
 
