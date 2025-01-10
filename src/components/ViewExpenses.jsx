@@ -133,6 +133,29 @@ function ViewExpenses() {
   const [transactions, setTransactions] = useState([]);
   const navigate = useNavigate();
   const username = localStorage.getItem('username');
+  const [isValidToken, setIsValidToken] = useState(null); // Track token validation status
+
+  useEffect(() => {
+    // Validate the JWT token on component mount
+    const validateToken = async () => {
+      const token = getJwtToken();
+      if (!token) {
+        alert('No token found. Redirecting to login page.');
+        handleLogout();
+        return;
+      }
+
+      const isValid = await validateJwt(token);
+      if (isValid) {
+        setIsValidToken(true);
+      } else {
+        alert('Invalid JWT session token. Redirecting to login page.');
+        handleLogout();
+      }
+    };
+
+    validateToken();
+  }, []);
 
   useEffect(() => {
     const fetchCreditCards = async () => {
@@ -196,12 +219,31 @@ function ViewExpenses() {
     // localStorage.removeItem("userNameFirst");
     // localStorage.removeItem("userNameLast");
     localStorage.clear();
-    navigate("/");
+    navigate("/login");
   };
 
-  const token=getJwtToken();
-  const isValid= validateJwt(token);
-  if (isValid) 
+
+  if (isValidToken === null) {
+    // Show a loading state while the token validation is in progress
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          bgcolor: '#f4f6f8',
+          color: '#333',
+        }}
+      >
+        <Typography variant="h6">Validating session...</Typography>
+      </Box>
+    );
+  }
+
+  if (!isValidToken) {
+    return null; // Redirect will occur in the `useEffect`, so nothing to render here
+  }
     {
     return (
         <Box sx={{ padding: 3, minHeight: "100vh", backgroundColor: "#bfbaba" }}>
@@ -311,12 +353,6 @@ function ViewExpenses() {
         )}
         </Box>
     );
-    }
-    else
-    {
-      alert("Invalid JWT session Token");
-      handleLogout();
-      // navigate("/");
     }
 }
 
