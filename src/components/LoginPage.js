@@ -31,8 +31,8 @@ export async function validateJwt(savedToken) {
   }
 
   try {
-    // const response = await axios.get('/api1/api/customer/token/validate', {
-    const response = await axios.get('/api1/api/customer/jwt/validate', {
+    const response = await axios.get('/api1/api/customer/token/validate', {
+    // const response = await axios.get('/api1/api/customer/jwt/validate', {
       params: { token: savedToken },
     });
 
