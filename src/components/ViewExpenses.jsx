@@ -55,7 +55,7 @@ const CreditCard = ({ card, onClick }) => {
       }}
       onClick={() => onClick(card.creditCardId)}
     >    
-        <Typography variant="h7" sx={{ marginLeft: 0, marginTop: -1 }}>Card ID: {`${card.creditCardId}`}</Typography>
+        <Typography variant="h7" sx={{ marginLeft: 0, marginTop: -1, fontSize: 11 }}>Card ID: {`${card.creditCardId}`}</Typography>
         <Box sx={{ display: "flex", justifyContent: "space-between", marginLeft: 0}}>
             <Box
                 component="img"
@@ -377,13 +377,13 @@ function ViewExpenses() {
                 Transactions for {creditCards.find((card) => card.creditCardId === selectedCard)?.holder}
             </Typography>
 
-            <Typography variant="h7" sx={{ marginTop: 0 }}>
+            <Typography variant="h7" sx={{ marginTop: 0, fontSize: 14 }}>
                 Selected Card ID: {`${selectedCard}`}
             </Typography>
 
             <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 3, marginTop: 3 }}>
                 <TextField
-                label="Number of Transactions"
+                label="Enter Number of Transactions to List"
                 type="number"
                 variant="outlined"
                 value={numTransactions}
