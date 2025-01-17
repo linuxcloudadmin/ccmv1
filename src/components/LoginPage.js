@@ -109,7 +109,7 @@ function LoginPage() {
       console.log(name.first);
       console.log(name.last);
       
-      alert();
+      // alert();
       console.log(token);
       console.log(getJwtToken());
 

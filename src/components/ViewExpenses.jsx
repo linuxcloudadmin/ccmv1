@@ -28,22 +28,6 @@ const CreditCard = ({ card, onClick }) => {
 
   const handleToggleDetails = async () => {
     setShowDetails(!showDetails);
-    // Call API to log toggle action
-    // axios.post("/api/toggleCardDetails", { cardId: card.creditCardId, showDetails: !showDetails });
-    const axios = require('axios').default;
-
-    const options = {
-    method: 'PUT',
-    url: 'http://localhost:8090/api/customer/creditcard/togglecreditcard/achilleyb/1/toggle'
-    // url: `/api2/api/customer/creditcard/togglecreditcard/${username}//toggle`
-    };
-
-    try {
-    const { data } = await axios.request(options);
-    console.log(data);
-    } catch (error) {
-    console.error(error);
-    }
   };
 
   return (
@@ -68,30 +52,34 @@ const CreditCard = ({ card, onClick }) => {
         <Box sx={{ display: "flex", justifyContent: "space-between", marginLeft: 0}}>
             <Box
                 component="img"
-                src="/images/image03.png"
+                src="/images/WMT-Spark-SparkYellow-RGB.svg"
                 alt="Walmart Logo"
-                sx={{ width: 40, height: 40 }}
+                sx={{ width: 40, height: 40, marginTop: 0 }}
             />
-            <Typography variant="h7" sx={{ marginLeft: 5, marginTop: 0 }}>Card ID: {`${card.creditCardId}`}</Typography>
-            {/* <IconButton onClick={handleToggleDetails} sx={{ color: "#fff", marginLeft: 17 }}>
-            {showDetails ? <VisibilityOffIcon /> : <VisibilityIcon />}
-            </IconButton> */}
+            <Typography variant="h7" sx={{ marginLeft: 5, marginTop: -1 }}>Card ID: {`${card.creditCardId}`}</Typography>
 
-            <Typography variant="h6" component="div" sx={{ color: "#ffcc00", marginTop: 0.5 }}>
+            <Box
+                component="img"
+                src="/images/WMT-Wordmark-Small-TrueBlue-White-RGB.svg"
+                alt="Walmart Logo"
+                sx={{ width: 80, height: 50, marginTop: 0 }}
+            />
+            {/* <Typography variant="h6" component="div" sx={{ color: "#ffcc00", marginTop: 0.5 }}>
             Walmart
-            </Typography>
+            </Typography> */}
 
         </Box>
 
-        {/* <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginLeft: 33 }}>       
-            <IconButton onClick={handleToggleDetails} sx={{ color: "#fff" }}>
-            {showDetails ? <VisibilityOffIcon /> : <VisibilityIcon />}
-            </IconButton>
-        </Box> */}
 
         <Box>
             <Typography variant="h6" sx={{ letterSpacing: 2, textAlign: "center" }}>
-            {showDetails ? card.creditCardNumber : "•••• •••• •••• ••••"}
+
+            {
+              showDetails 
+              ? card.creditCardNumber.replace(/-/g, " ")                // Show the full number when `showDetails` is true and replace the "-" with space
+              : `•••• •••• •••• ${card.creditCardNumber.slice(-4)}`     // Mask all but the last 4 digits when false
+            }
+
             </Typography>
             
             <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }} >
@@ -100,10 +88,17 @@ const CreditCard = ({ card, onClick }) => {
                     <Typography variant="body2">{card.holder}</Typography>
                 </Box>
 
-                {/* <Box>
+                <Box>
                     <Typography variant="caption">CVV</Typography>
-                    <Typography variant="body2">{`${card.cvv}`}</Typography>
-                </Box> */}
+                    {/* <Typography variant="body2">{`${card.cvv}`}</Typography> */} 
+                    <Typography variant="body2">
+                    {
+                    showDetails 
+                    ? card.cvv    // Show the full cvv number when `showDetails` is true 
+                    : `•••`       // Mask all digits when false
+                    }
+                    </Typography>
+                </Box>
 
                 <Box>
                     <Typography variant="caption">Valid Till</Typography>
@@ -116,10 +111,37 @@ const CreditCard = ({ card, onClick }) => {
             <IconButton onClick={handleToggleDetails} sx={{ color: "#fff" }}>
                     {showDetails ? <VisibilityOffIcon /> : <VisibilityIcon />}
             </IconButton>
+            
+            <Box
+                component="img"
+                // src="/images/rupay_logo.png"
+                src={
+                  card.wireTransactionVendor.toLowerCase() === "rupay" ? "/images/rupay_logo.png" :
+                  card.wireTransactionVendor.toLowerCase() === "visa" ? "/images/visa_logo.png" :
+                  card.wireTransactionVendor.toLowerCase() === "mastercard" ? "/images/mastercard_logo.png" :
+                  "/images/default_logo.png"  // Default logo if none of the above match
+                }
 
-            <Typography variant="body2" align="right" sx={{ marginBottom :0 }} >
+                alt={`${card.wireTransactionVendor} Logo`}
+                sx={{
+                    marginBottom: -10,
+                    width: 
+                        card.wireTransactionVendor.toLowerCase() === "visa" ? 80 : 
+                        card.wireTransactionVendor.toLowerCase() === "mastercard" ? 90 : 
+                        card.wireTransactionVendor.toLowerCase() === "rupay" ? 100 : 70, // Set width based on vendor
+                    height: 
+                        card.wireTransactionVendor.toLowerCase() === "visa" ? 45 : 
+                        card.wireTransactionVendor.toLowerCase() === "mastercard" ? 50 : 
+                        card.wireTransactionVendor.toLowerCase() === "rupay" ? 60 : 40, // Set height based on vendor
+                    // ...(card.wireTransactionVendor.toLowerCase() === "visa" && { border: "2px solid blue" }), // Example for Visa
+                    // ...(card.wireTransactionVendor.toLowerCase() === "mastercard" && { border: "2px solid red" }), // Example for Mastercard
+                    // ...(card.wireTransactionVendor.toLowerCase() === "rupay" && { border: "2px solid green" }), // Example for Rupay
+                }}
+            />
+
+            {/* <Typography variant="body2" align="right" sx={{ marginBottom :0 }} >
                 {card.wireTransactionVendor.toUpperCase()}
-            </Typography>
+            </Typography> */}
         </Box>
         
     </Card>
@@ -133,8 +155,9 @@ function ViewExpenses() {
   const [transactions, setTransactions] = useState([]);
   const navigate = useNavigate();
   const username = localStorage.getItem('username');
+  const encodedUsername=btoa(username);
   const [isValidToken, setIsValidToken] = useState(null); // Track token validation status
-
+  
   useEffect(() => {
     // Validate the JWT token on component mount
     const validateToken = async () => {
@@ -160,11 +183,18 @@ function ViewExpenses() {
   useEffect(() => {
     const fetchCreditCards = async () => {
       try {
+        // console.log(encodedUsername);
+        // const encodedUsername="YWNoaWxsZXli";
         const response = await axios.get(
-          "/api2/api/customer/creditcard/listcreditcards/achilleyb"
-        //   `/api2/api/customer/creditcard/listcreditcards/${username}`
+          // "/api2/api/customer/creditcard/listcreditcards/YWNoaWxsZXli",       
+          `/api2/api/customer/creditcard/listcreditcards/${encodedUsername}`,   //uncomment to use encoded username
+           // "/api2/api/customer/creditcard/listcreditcards/achilleyb",       
+        {
+          params: {showFullNumber: 'true'},
+        }
         );
         const data = response.data;
+        console.log(response.data);
         const activeCards = data.creditcards
           .filter((card) => card.status === "enabled")
           .map((card) => ({
@@ -183,14 +213,33 @@ function ViewExpenses() {
   const fetchTransactions = async (cardId, limit) => {
     try {
       const response = await axios.get(
-        "/api2/api/customer/transactions/lastXTransactions/achilleyb",
-        //   `/api2/api/customer/transactions/lastXTransactions/${username}`,
-        {
-          params: { limit, status: "both" },
-        }
+        // "/api2/api/customer/transactions/YWNoaWxsZXli",
+        `/api2/api/customer/transactions/${encodedUsername}`,   //uncomment to use encoded username
+
+        // "/api2/api/customer/transactions/lastXTransactions/achilleyb",
+        // {
+        //   params: { limit, status: "both" },
+        // }
+
       );
-      const data = response.data;
-      setTransactions(data[cardId] || []);
+      const data = response.data.content;
+      const filteredTransactions = data.filter(
+        (transaction) => transaction.creditCardId === cardId
+      )
+      console.log(data);
+      console.log(filteredTransactions);
+
+      const sortedTransactions = filteredTransactions.sort((a, b) => 
+        new Date(b.transactionDetail.transactionDate) - new Date(a.transactionDetail.transactionDate)
+        // b.transactionDetail.transactionAmount - a.transactionDetail.transactionAmount   //sort by amount in descending order.
+      );
+      console.log("sorted",sortedTransactions);
+
+      const limitedTransactions = sortedTransactions.slice(0, limit);
+      console.log(limitedTransactions);
+      setTransactions(limitedTransactions || []);
+      // setTransactions(filteredTransactions || []);
+      // setTransactions(sortedTransactions || []);
     } catch (error) {
       console.error("Failed to fetch transactions:", error);
     }
@@ -306,6 +355,7 @@ function ViewExpenses() {
         </Grid>
 
         {selectedCard && (
+        // {(    //uncomment this and comment above line to have the transaction block always visible.
             <Box
             sx={{
                 marginTop: 4,
@@ -354,13 +404,13 @@ function ViewExpenses() {
                     </TableHead>
                     <TableBody>
                     {transactions.map((transaction) => (
-                        <TableRow key={transaction.transactionId}>
-                        <TableCell>{transaction.transactionId}</TableCell>
-                        <TableCell>${transaction.transactionAmount.toFixed(2)}</TableCell>
-                        <TableCell>{transaction.transactionDate}</TableCell>
-                        <TableCell>{transaction.transactionTime}</TableCell>
-                        <TableCell>{transaction.transactionType.toUpperCase()}</TableCell>
-                        <TableCell>{transaction.transactionDesc}</TableCell>
+                        <TableRow key={transaction.transactionDetail.transactionId}>
+                        <TableCell>{transaction.transactionDetail.transactionId}</TableCell>
+                        <TableCell>${transaction.transactionDetail.transactionAmount.toFixed(2)}</TableCell>
+                        <TableCell>{transaction.transactionDetail.transactionDate}</TableCell>
+                        <TableCell>{transaction.transactionDetail.transactionTime}</TableCell>
+                        <TableCell>{transaction.transactionDetail.transactionType.toUpperCase()}</TableCell>
+                        <TableCell>{transaction.transactionDetail.transactionDesc}</TableCell>
                         </TableRow>
                     ))}
                     </TableBody>

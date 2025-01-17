@@ -34,7 +34,7 @@ module.exports = function (app) {
   app.use(
     '/api2',
     createProxyMiddleware({
-      target: 'http://localhost:8090',
+      target: 'http://localhost:8091',
       // target: 'http://host.docker.internal:8090',
       changeOrigin: true,
       pathRewrite: { '^/api2': '' }, // Optional: Removes `/api2` from the request path
