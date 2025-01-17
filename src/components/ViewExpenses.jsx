@@ -26,11 +26,17 @@ import { getJwtToken, removeJwtToken, validateJwt } from './LoginPage';
 const CreditCard = ({ card, onClick }) => {
   const [showDetails, setShowDetails] = useState(false);
 
-  const handleToggleDetails = async () => {
-    setShowDetails(!showDetails);
+  const handleToggleDetails = () => {
+    // setShowDetails(!showDetails);
+    setShowDetails((prev) => !prev);
+    if (!showDetails) {
+      setTimeout(() => {
+        setShowDetails(false);
+      }, 5000);
+    }
   };
 
-  return (
+  return (    
     <Card
       sx={{
         width: 320,
@@ -48,21 +54,22 @@ const CreditCard = ({ card, onClick }) => {
         "&:hover": { transform: "scale(1.05)" },
       }}
       onClick={() => onClick(card.creditCardId)}
-    >
+    >    
+        <Typography variant="h7" sx={{ marginLeft: 0, marginTop: -1 }}>Card ID: {`${card.creditCardId}`}</Typography>
         <Box sx={{ display: "flex", justifyContent: "space-between", marginLeft: 0}}>
             <Box
                 component="img"
                 src="/images/WMT-Spark-SparkYellow-RGB.svg"
-                alt="Walmart Logo"
+                alt="Spark Logo"
                 sx={{ width: 40, height: 40, marginTop: 0 }}
             />
-            <Typography variant="h7" sx={{ marginLeft: 5, marginTop: -1 }}>Card ID: {`${card.creditCardId}`}</Typography>
+            {/* <Typography variant="h7" sx={{ marginLeft: 5, marginTop: -1 }}>Card ID: {`${card.creditCardId}`}</Typography> */}
 
             <Box
                 component="img"
                 src="/images/WMT-Wordmark-Small-TrueBlue-White-RGB.svg"
                 alt="Walmart Logo"
-                sx={{ width: 80, height: 50, marginTop: 0 }}
+                sx={{ width: 100, height: 75, marginTop: -2 }}
             />
             {/* <Typography variant="h6" component="div" sx={{ color: "#ffcc00", marginTop: 0.5 }}>
             Walmart
@@ -84,12 +91,12 @@ const CreditCard = ({ card, onClick }) => {
             
             <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }} >
                 <Box>
-                    <Typography variant="caption">Card Holder</Typography>
-                    <Typography variant="body2">{card.holder}</Typography>
+                    <Typography variant="caption" sx={{fontSize:9}}>Card Holder</Typography>
+                    <Typography variant="body2" >{card.holder}</Typography>
                 </Box>
 
                 <Box>
-                    <Typography variant="caption">CVV</Typography>
+                    <Typography variant="caption" sx={{fontSize:9}}>CVV</Typography>
                     {/* <Typography variant="body2">{`${card.cvv}`}</Typography> */} 
                     <Typography variant="body2">
                     {
@@ -101,7 +108,7 @@ const CreditCard = ({ card, onClick }) => {
                 </Box>
 
                 <Box>
-                    <Typography variant="caption">Valid Till</Typography>
+                    <Typography variant="caption" sx={{fontSize:9}} >Valid Till</Typography>
                     <Typography variant="body2">{`${card.expiryMonth}/${card.expiryYear}`}</Typography>
                 </Box>
             </Box>
@@ -394,23 +401,23 @@ function ViewExpenses() {
                 <Table>
                     <TableHead>
                     <TableRow>
-                        <TableCell>ID</TableCell>
-                        <TableCell>Amount</TableCell>
+                        <TableCell>ID</TableCell>                        
                         <TableCell>Date</TableCell>
-                        <TableCell>Time</TableCell>
-                        <TableCell>Type</TableCell>
+                        <TableCell>Time</TableCell>                        
                         <TableCell>Description</TableCell>
+                        <TableCell>Amount</TableCell>
+                        <TableCell>Type</TableCell>
                     </TableRow>
                     </TableHead>
                     <TableBody>
                     {transactions.map((transaction) => (
                         <TableRow key={transaction.transactionDetail.transactionId}>
-                        <TableCell>{transaction.transactionDetail.transactionId}</TableCell>
-                        <TableCell>${transaction.transactionDetail.transactionAmount.toFixed(2)}</TableCell>
+                        <TableCell>{transaction.transactionDetail.transactionId}</TableCell>                        
                         <TableCell>{transaction.transactionDetail.transactionDate}</TableCell>
-                        <TableCell>{transaction.transactionDetail.transactionTime}</TableCell>
-                        <TableCell>{transaction.transactionDetail.transactionType.toUpperCase()}</TableCell>
+                        <TableCell>{transaction.transactionDetail.transactionTime}</TableCell>                        
                         <TableCell>{transaction.transactionDetail.transactionDesc}</TableCell>
+                        <TableCell>${transaction.transactionDetail.transactionAmount.toFixed(2)}</TableCell>
+                        <TableCell>{transaction.transactionDetail.transactionType.toUpperCase()}</TableCell>
                         </TableRow>
                     ))}
                     </TableBody>
