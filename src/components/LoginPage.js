@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { data, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import './LoginPage.css';
 import validator from "validator";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { setUserName, fetchUsernameFromApi, checkToken } from './userData';
+import Button from '@mui/material/Button';
 
 
 
@@ -232,7 +233,21 @@ function LoginPage() {
             />
           </div>
           <button type="submit" className="login-button">Login</button>
+
         </form>
+          <Button variant="outlined" sx={{marginTop: 2}}
+          // onClick={() => navigate('/signup')}
+          // component={Link} to="/signup"
+          >
+            Don't have an account? Sign Up
+          </Button>
+
+          <Button variant="outlined" sx={{marginTop: 2}}
+          // onClick={() => navigate('/forgotpassword')}
+          // component={Link} to="/forgotpassword"
+          >
+            Forgot password
+          </Button>
       </div>
 
       {showVerificationModal && (
