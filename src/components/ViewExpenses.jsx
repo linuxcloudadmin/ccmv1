@@ -245,6 +245,8 @@ function ViewExpenses() {
       const limitedTransactions = sortedTransactions.slice(0, limit);
       console.log(limitedTransactions);
       setTransactions(limitedTransactions || []);
+      if (limitedTransactions.length == 0)
+        alert("No Transactions found for this credit card");
       // setTransactions(filteredTransactions || []);
       // setTransactions(sortedTransactions || []);
     } catch (error) {
@@ -399,16 +401,16 @@ function ViewExpenses() {
             {transactions.length > 0 ? (
                 <TableContainer component={Paper}>
                 <Table>
-                    <TableHead>
-                    <TableRow>
-                        <TableCell>ID</TableCell>                        
-                        <TableCell>Date</TableCell>
-                        <TableCell>Time</TableCell>                        
-                        <TableCell>Description</TableCell>
-                        <TableCell>Amount</TableCell>
-                        <TableCell>Type</TableCell>
-                    </TableRow>
-                    </TableHead>
+                <TableHead>
+                  <TableRow sx={{ backgroundColor: "#0047ba" }}> {/* Custom background color */}
+                    <TableCell sx={{ fontWeight: "bold", color: "#fff", textAlign: "justify"  }}>ID</TableCell>
+                    <TableCell sx={{ fontWeight: "bold", color: "#fff" }}>Date</TableCell>
+                    <TableCell sx={{ fontWeight: "bold", color: "#fff" }}>Time</TableCell>
+                    <TableCell sx={{ fontWeight: "bold", color: "#fff" }}>Description</TableCell>
+                    <TableCell sx={{ fontWeight: "bold", color: "#fff" }}>Amount</TableCell> {/* Right-aligned for numerical values */}
+                    <TableCell sx={{ fontWeight: "bold", color: "#fff" }}>Type</TableCell>
+                  </TableRow>
+                </TableHead>
                     <TableBody>
                     {transactions.map((transaction) => (
                         <TableRow key={transaction.transactionDetail.transactionId}>
@@ -424,8 +426,8 @@ function ViewExpenses() {
                 </Table>
                 </TableContainer>
             ) : (
-                <Typography>No transactions found.</Typography>
-            )}
+                <Typography></Typography>
+            )}            
             </Box>
         )}
         </Box>
