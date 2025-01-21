@@ -31,11 +31,32 @@ export async function validateJwt(savedToken) {
     return false; // Indicate validation failure without throwing an error    
   }
 
+  const options = {
+    method: 'GET',
+    url: '/api1/api/customer/token/validate',
+    params: {
+      token: savedToken
+    },
+    headers: {
+      Accept: '*/*',
+      Authorization: `Bearer ${savedToken}`,
+      'Content-Type': 'application/json'
+    }
+  };
+
   try {
-    const response = await axios.get('/api1/api/customer/token/validate', {
-    // const response = await axios.get('/api1/api/customer/jwt/validate', {
-      params: { token: savedToken },
-    });
+    // const response = await axios.get('/api1/api/customer/token/validate', {
+    // // const response = await axios.get('/api1/api/customer/jwt/validate', {
+    //   params: { token: savedToken },
+    // });
+
+    // const { data } = await axios(options);
+    // console.log("data is",data);
+
+    // if (data.status === 'Token is valid') {
+
+    const response = await axios(options);
+    console.log("response is",response);
 
     if (response.status === 200) {
       return true;
