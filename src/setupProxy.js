@@ -21,8 +21,8 @@ module.exports = function (app) {
   app.use(
     '/api1', // Route to match
     createProxyMiddleware({
-      target: 'http://localhost:8081',
-      // target: 'http://host.docker.internal:8081',
+//      target: 'http://localhost:8081',
+      target: 'http://host.docker.internal:8081',
       changeOrigin: true,
       pathRewrite: { '^/api1': '' }, // Optional: Removes `/api1` from the request path
       // logLevel: 'debug',
@@ -34,8 +34,8 @@ module.exports = function (app) {
   app.use(
     '/api2',
     createProxyMiddleware({
-      target: 'http://localhost:8091',
-      // target: 'http://host.docker.internal:8090',
+      //target: 'http://localhost:8091',
+      target: 'http://host.docker.internal:8091',
       changeOrigin: true,
       pathRewrite: { '^/api2': '' }, // Optional: Removes `/api2` from the request path
       // onError,
