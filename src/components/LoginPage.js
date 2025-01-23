@@ -31,18 +31,19 @@ export async function validateJwt(savedToken) {
     return false; // Indicate validation failure without throwing an error    
   }
 
-  const options = {
-    method: 'GET',
-    url: '/api1/api/customer/token/validate',
-    params: {
-      token: savedToken
-    },
-    headers: {
-      Accept: '*/*',
-      Authorization: `Bearer ${savedToken}`,
-      'Content-Type': 'application/json'
-    }
-  };
+  // const options = {
+  //   method: 'GET',
+  //   // url: '/api1/api/customer/token/validate',
+  //   url: `${process.env.REACT_APP_API1_URL}/api/customer/token/validate`,
+  //   params: {
+  //     token: savedToken
+  //   },
+  //   headers: {
+  //     Accept: '*/*',
+  //     Authorization: `Bearer ${savedToken}`,
+  //     'Content-Type': 'application/json',
+  //   }
+  // };
 
   try {
     // const response = await axios.get('/api1/api/customer/token/validate', {
@@ -55,7 +56,27 @@ export async function validateJwt(savedToken) {
 
     // if (data.status === 'Token is valid') {
 
-    const response = await axios(options);
+    // const response = await axios(options);
+    // const response = await axios.get({ `${process.env.REACT_APP_API1_URL}/api/customer/token/validate`, params: { token: savedToken }, headers: { Accept: '*/*', Authorization: `Bearer ${savedToken}`, 'Content-Type': 'application/json' } });
+
+    const response = await axios.get(`${process.env.REACT_APP_API1_URL}/api/customer/token/validate`, {
+        params: { 
+          token: savedToken 
+        },
+        headers: { 
+         Accept: '*/*', 
+         Authorization: `Bearer ${savedToken}`, 
+        'Content-Type': 'application/json'
+        } 
+      }
+    );
+
+    // const response = await axios.get(`${process.env.REACT_APP_API1_URL}/api/customer/jwt/validate`, {
+    //   params: {
+    //     token: savedToken
+    //   }
+    // });
+
     console.log("response is",response);
 
     if (response.status === 200) {
@@ -117,7 +138,8 @@ function LoginPage() {
 
     try {
       const encodedPassword = btoa(password);
-      const response = await axios.post('/api1/api/customer/login/subsequent', { email, password: encodedPassword, });
+      // const response = await axios.post('/api1/api/customer/login/subsequent', { email, password: encodedPassword, });
+      const response = await axios.post(`${process.env.REACT_APP_API1_URL}/api/customer/login/subsequent`, { email, password: encodedPassword, });
       const { token, name, accountValidated, passwordExpired, message } = response.data;
 
       console.log(response.data);
@@ -131,7 +153,7 @@ function LoginPage() {
       console.log(name.first);
       console.log(name.last);
       
-      // alert();
+      alert();
       console.log(token);
       console.log(getJwtToken());
 
@@ -186,7 +208,8 @@ function LoginPage() {
       console.log(modalEmail);
       const options = {
         method: 'POST',
-        url: '/api1/api/customer/send-verification',
+        // url: '/api1/api/customer/send-verification',
+        url: `${process.env.REACT_APP_API1_URL}/api/customer/send-verification`,
         headers: {
           Accept: '*/*',
           Authorization: `Bearer ${token}`,
