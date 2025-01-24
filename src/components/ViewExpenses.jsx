@@ -21,6 +21,7 @@ import {
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import TablePagination from "@mui/material/TablePagination";
 import { getJwtToken, removeJwtToken, validateJwt } from './LoginPage';
 
 const CreditCard = ({ card, onClick }) => {
@@ -164,6 +165,8 @@ function ViewExpenses() {
   const username = localStorage.getItem('username');
   const encodedUsername=btoa(username);
   const [isValidToken, setIsValidToken] = useState(null); // Track token validation status
+  const [page, setPage] = useState(0); // For pagination
+  const [rowsPerPage, setRowsPerPage] = useState(10); // Default rows per page
   
   useEffect(() => {
     // Validate the JWT token on component mount
@@ -245,7 +248,7 @@ function ViewExpenses() {
       const limitedTransactions = sortedTransactions.slice(0, limit);
       console.log(limitedTransactions);
       setTransactions(limitedTransactions || []);
-      if (limitedTransactions.length == 0)
+      if (limitedTransactions.length === 0)
         alert("No Transactions found for this credit card");
       // setTransactions(filteredTransactions || []);
       // setTransactions(sortedTransactions || []);
@@ -262,6 +265,8 @@ function ViewExpenses() {
   const handleTransactionsSubmit = () => {
     const parsedNumber = parseInt(numTransactions, 10);
     if (!Number.isNaN(parsedNumber) && parsedNumber > 0) {
+      setPage(0);
+      setRowsPerPage(10);
       fetchTransactions(selectedCard, parsedNumber);
     } else {
       alert("Please enter a valid number!");
@@ -271,6 +276,20 @@ function ViewExpenses() {
   const goToHome = () => {
     navigate("/dashboard");
   };
+
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleRowsPerPageChange = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); // Reset to the first page
+  };
+
+  const paginatedTransactions = transactions.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
 
   const handleLogout = async () => {
     // const axios = require('axios').default;
@@ -365,70 +384,78 @@ function ViewExpenses() {
 
         {selectedCard && (
         // {(    //uncomment this and comment above line to have the transaction block always visible.
-            <Box
-            sx={{
-                marginTop: 4,
-                padding: 5,
-                backgroundColor: "#fff",
-                borderRadius: 2,
-                maxWidth: 800,
-                mx: "auto",
-            }}
-            >
-            <Typography variant="h5" gutterBottom sx={{ marginTop: 0 }}>
-                Transactions for {creditCards.find((card) => card.creditCardId === selectedCard)?.holder}
-            </Typography>
-
-            <Typography variant="h7" sx={{ marginTop: 0, fontSize: 14 }}>
-                Selected Card ID: {`${selectedCard}`}
-            </Typography>
-
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 3, marginTop: 3 }}>
-                <TextField
-                label="Enter Number of Transactions to List"
-                type="number"
-                variant="outlined"
-                value={numTransactions}
-                onChange={(e) => setNumTransactions(e.target.value)}
-                fullWidth
-                />
-                
-                <Button variant="contained" onClick={handleTransactionsSubmit}>
-                View
-                </Button>
-            </Box>
-
-            {transactions.length > 0 ? (
-                <TableContainer component={Paper}>
-                <Table>
-                <TableHead>
-                  <TableRow sx={{ backgroundColor: "#0047ba" }}> {/* Custom background color */}
-                    <TableCell sx={{ fontWeight: "bold", color: "#fff", textAlign: "justify"  }}>ID</TableCell>
-                    <TableCell sx={{ fontWeight: "bold", color: "#fff" }}>Date</TableCell>
-                    <TableCell sx={{ fontWeight: "bold", color: "#fff" }}>Time</TableCell>
-                    <TableCell sx={{ fontWeight: "bold", color: "#fff" }}>Description</TableCell>
-                    <TableCell sx={{ fontWeight: "bold", color: "#fff" }}>Amount</TableCell> {/* Right-aligned for numerical values */}
-                    <TableCell sx={{ fontWeight: "bold", color: "#fff" }}>Type</TableCell>
+        <Box
+        sx={{
+          marginTop: 4,
+          padding: 5,
+          backgroundColor: "#fff",
+          borderRadius: 2,
+          maxWidth: 800,
+          mx: "auto",
+        }}
+      >
+        <Typography variant="h5" gutterBottom sx={{ marginTop: 0 }}>
+          Transactions for {creditCards.find((card) => card.creditCardId === selectedCard)?.holder}
+        </Typography>
+  
+        <Typography variant="h7" sx={{ marginTop: 0, fontSize: 14 }}>
+          Selected Card ID: {`${selectedCard}`}
+        </Typography>
+  
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 3, marginTop: 3 }}>
+          <TextField
+            label="Enter Number of Transactions to List"
+            type="number"
+            variant="outlined"
+            value={numTransactions}
+            onChange={(e) => setNumTransactions(e.target.value)}
+            fullWidth
+          />
+          <Button variant="contained" onClick={handleTransactionsSubmit}>
+            View
+          </Button>
+        </Box>
+  
+        {transactions.length > 0 ? (
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow sx={{ backgroundColor: "#0047ba" }}>
+                  <TableCell sx={{ fontWeight: "bold", color: "#fff" }}>ID</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", color: "#fff" }}>Date</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", color: "#fff" }}>Time</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", color: "#fff" }}>Description</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", color: "#fff" }}>Amount</TableCell>
+                  <TableCell sx={{ fontWeight: "bold", color: "#fff" }}>Type</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {paginatedTransactions.map((transaction) => (
+                  <TableRow key={transaction.transactionDetail.transactionId}>
+                    <TableCell>{transaction.transactionDetail.transactionId}</TableCell>
+                    <TableCell>{transaction.transactionDetail.transactionDate}</TableCell>
+                    <TableCell>{transaction.transactionDetail.transactionTime}</TableCell>
+                    <TableCell>{transaction.transactionDetail.transactionDesc}</TableCell>
+                    <TableCell>${transaction.transactionDetail.transactionAmount.toFixed(2)}</TableCell>
+                    <TableCell>{transaction.transactionDetail.transactionType.toUpperCase()}</TableCell>
                   </TableRow>
-                </TableHead>
-                    <TableBody>
-                    {transactions.map((transaction) => (
-                        <TableRow key={transaction.transactionDetail.transactionId}>
-                        <TableCell>{transaction.transactionDetail.transactionId}</TableCell>                        
-                        <TableCell>{transaction.transactionDetail.transactionDate}</TableCell>
-                        <TableCell>{transaction.transactionDetail.transactionTime}</TableCell>                        
-                        <TableCell>{transaction.transactionDetail.transactionDesc}</TableCell>
-                        <TableCell>${transaction.transactionDetail.transactionAmount.toFixed(2)}</TableCell>
-                        <TableCell>{transaction.transactionDetail.transactionType.toUpperCase()}</TableCell>
-                        </TableRow>
-                    ))}
-                    </TableBody>
-                </Table>
-                </TableContainer>
-            ) : (
-                <Typography></Typography>
-            )}            
-            </Box>
+                ))}
+              </TableBody>
+            </Table>
+            <TablePagination
+              component="div"
+              count={transactions.length}
+              page={page}
+              onPageChange={handlePageChange}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleRowsPerPageChange}
+            />
+          </TableContainer>
+        ) : (
+          <Typography></Typography>
+        )}
+      </Box>
+  
         )}
         </Box>
     );
