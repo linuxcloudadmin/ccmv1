@@ -249,6 +249,7 @@ function ViewExpenses() {
       const limitedTransactions = sortedTransactions.slice(0, limit);
       console.log(limitedTransactions);
       setTransactions(limitedTransactions || []);
+      setPage(0);
       if (limitedTransactions.length === 0)
         alert("No Transactions found for this credit card");
       // setTransactions(filteredTransactions || []);
@@ -266,8 +267,6 @@ function ViewExpenses() {
   const handleTransactionsSubmit = () => {
     const parsedNumber = parseInt(numTransactions, 10);
     if (!Number.isNaN(parsedNumber) && parsedNumber > 0) {
-      setPage(0);
-      setRowsPerPage(10);
       fetchTransactions(selectedCard, parsedNumber);
     } else {
       alert("Please enter a valid number!");
